@@ -5,7 +5,7 @@ import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), cssInjectedByJsPlugin()],
-  // base: "https://cdn.jsdelivr.net/gh/riefer02/van-chat/dist/",
+  base: "https://cdn.jsdelivr.net/gh/riefer02/van-chat/dist/",
   build: {
     rollupOptions: {
       input: {
