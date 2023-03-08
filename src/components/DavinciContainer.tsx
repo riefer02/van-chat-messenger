@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import Conversation from "./Conversation";
 import useLocalStorageState from "../hooks/use-local-storage";
 
 interface OpenAIContainerProps {}
 
-interface ConversationItem {
-  isBot: boolean;
-  text: string;
+interface Message {
+  role: "user" | "assistant" | "system";
+  content: string;
 }
 
 function OpenAIContainer(props: OpenAIContainerProps): JSX.Element {
-  const [conversation, setConversation] = useLocalStorageState<
-    ConversationItem[]
-  >("conversation", []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [conversation, setConversation] = useLocalStorageState<Message[]>(
+    "conversation",
+    []
+  );
 
   async function handleInput(inputText: string): Promise<void> {
     const response = await fetch("http://localhost:8000/openai", {
@@ -23,22 +25,21 @@ function OpenAIContainer(props: OpenAIContainerProps): JSX.Element {
       },
       body: JSON.stringify({
         context:
-          conversation.map((item: ConversationItem) => item.text).join("\n") +
+          conversation.map((item: Message) => item.content).join("\n") +
           (conversation.length ? "\n" : "") +
           inputText,
       }),
     });
-    console.log({ response });
 
     const responseText = await response.text();
-    const responseItem: ConversationItem = {
-      isBot: true,
-      text: responseText,
+    const responseItem: Message = {
+      role: "assistant",
+      content: responseText,
     };
 
     setConversation([
       ...conversation,
-      { text: inputText, isBot: false },
+      { content: inputText, role: "assistant" },
       responseItem,
     ]);
   }
@@ -52,13 +53,17 @@ function OpenAIContainer(props: OpenAIContainerProps): JSX.Element {
       ?.value?.trim();
     if (!inputText) return;
 
-    setConversation([...conversation, { text: inputText, isBot: false }]);
+    setConversation([...conversation, { content: inputText, role: "user" }]);
     handleInput(inputText);
     event.currentTarget.reset();
   }
 
   return (
-    <Conversation conversation={conversation} handleSubmit={handleSubmit} />
+    <Conversation
+      conversation={conversation}
+      handleSubmit={handleSubmit}
+      isLoading={isLoading}
+    />
   );
 }
 

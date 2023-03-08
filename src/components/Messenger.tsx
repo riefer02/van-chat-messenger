@@ -18,7 +18,7 @@ const Messenger: FC<MessengerProps> = ({ children }) => {
     width: "60px",
     height: "60px",
     borderRadius: "50%",
-    backgroundColor: active ? "#007aff" : "#ccc",
+    backgroundColor: active ? "#683660" : "#ccc",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -26,18 +26,21 @@ const Messenger: FC<MessengerProps> = ({ children }) => {
     fontSize: "24px",
     cursor: "pointer",
     transition: "background-color 0.3s ease",
+    zIndex: 9999,
   };
 
   const messengerContentStyles: React.CSSProperties = {
     position: "fixed",
     bottom: "90px",
     right: "20px",
-    width: "300px",
-    height: "400px",
-    backgroundColor: "#fff",
+    width: "min-content",
+    // height: "400px",
+    backgroundColor: "#683660",
     boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
     display: active ? "block" : "none",
     zIndex: 9999,
+    padding: "8px",
+    borderRadius: "5px",
   };
 
   return (
